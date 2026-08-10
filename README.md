@@ -2,49 +2,23 @@
 
 Independent GlacierEQ portfolio exhibit aligned to **Pinecone** operating themes.
 
-> **Not affiliated.** This repository is not affiliated with, endorsed by, employed by, or deployed at Pinecone.
-> No proprietary access, production deployment, customer impact, or company partnership is claimed.
+> **Not affiliated.** This repository is not affiliated with, endorsed by, employed by, or deployed at Pinecone. No proprietary access, production deployment, customer impact, or company partnership is claimed.
 
-## Bottleneck (GlacierEQ hypothesis)
+## Implemented mechanism
 
-defending specialized vector infrastructure as vector search becomes a built-in feature of general-purpose databases
+`RetrievalOutcomeOptimizer` turns retrieval selection into a measurable constrained decision instead of a generic allow/refuse gate.
 
-**Brick wall:** Silent success without receipts; affiliation or production claims without evidence.
+Each candidate carries relevance, quality, freshness, latency, and cost. A request declares minimum quality/relevance/freshness, maximum latency, total cost budget, and result limit. Candidates outside the contract are removed; the remaining set is deterministically ranked and selected without exceeding cumulative cost.
 
-**Observed public pressure (snapshot hypothesis):** Public market pressure toward AI-enabled products and operators (hypothesis only).
+The mechanism fails closed for non-finite values, invalid metric ranges, negative budgets, and requests with no candidate satisfying the declared outcome constraints.
 
-## Innovation mechanism
+## Proof surface
 
-**Retrieval Outcome Optimizer** — Optimize indexes, filters, rerankers, namespaces and freshness against downstream answer/task success rather than ANN recall in isolation.
+- `src/retrieval_outcome_optimizer.py` — deterministic optimizer
+- `tests/test_retrieval_outcome_optimizer.py` — quality, latency, cost, tie-break, invalid-domain tests
+- `scripts/operate.py` — direct optimization execution
+- `.github/workflows/tests.yml` — pytest + operate CI
 
-## Target roles
+## Current boundary
 
-- Applied AI Systems Engineer
-- Forward-Deployed Engineer
-
-## Application move
-
-Lead with a small, inspectable Vector Namespace Fence exhibit and explicit non-affiliation boundary.
-
-## Current scaffold state
-
-This leaf is a **scaffold**: contracts, tests, and a stub mechanism exist so another engineer/AI can fill production-grade code without inventing company affiliation.
-
-| Surface | Path |
-|---------|------|
-| Mechanism stub | `src/retrieval_outcome_optimizer.py` |
-| Operate entry | `scripts/operate.py` |
-| Contract tests | `tests/` |
-| Target contract | `machine/target-contract.json` |
-| **AI fill-in brief** | **`DEV_UP_INSTRUCTIONS.md`** |
-| Issue contract | `ISSUE_CONTRACT.md` |
-
-## Non-claims
-
-- No Pinecone employment, endorsement, proprietary data, or production use
-- No customer, revenue, latency, or scale claims without separate receipts
-- Scaffold tests define **intended behavior**, not verified production excellence
-
-## Next gate
-
-CURRENT_SOURCE_VALIDATION
+This is a synthetic reference optimizer. It does not call Pinecone APIs or claim measured production search quality. The next gate is replay against a labeled retrieval dataset and then a disposable index.
