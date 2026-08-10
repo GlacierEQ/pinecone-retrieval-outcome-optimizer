@@ -1,0 +1,12 @@
+{
+  "schema": "glaciereq.repo-capabilities.v1",
+  "repository": "GlacierEQ/pinecone-retrieval-outcome-optimizer",
+  "capabilities": [
+    {
+      "id": "retrieval-outcome-optimizer",
+      "name": "Retrieval Outcome Optimizer",
+      "status": "SCAFFOLD",
+      "module": "src/retrieval_outcome_optimizer.py"
+    }
+  ]
+}

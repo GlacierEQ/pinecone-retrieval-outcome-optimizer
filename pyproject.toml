@@ -1,0 +1,10 @@
+[project]
+name = "pinecone-retrieval-outcome-optimizer"
+version = "0.0.1"
+description = "Scaffold: Retrieval Outcome Optimizer (independent Pinecone lens)"
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

@@ -1,0 +1,31 @@
+{
+  "schema": "glaciereq.proof-receipt.v1",
+  "repository": "GlacierEQ/pinecone-retrieval-outcome-optimizer",
+  "source_sha": "74bac97fc305fca8eccb00263c0ab364082075533e65e694aaf7475e7ea55298",
+  "proof_id": "elite-pinecone-retrieval-outcome-optimizer-1786356680",
+  "environment": {
+    "python": "/Users/kcbflux/.local/bin/python3.11",
+    "PYTHONPATH": "/Users/kcbflux/GlacierEQ_Swarm/job-app/repos/pinecone-retrieval-outcome-optimizer:/Users/kcbflux/GlacierEQ_Swarm/job-app/repos/pinecone-retrieval-outcome-optimizer/src",
+    "entry": "unittest"
+  },
+  "tests": [
+    "/Users/kcbflux/.local/bin/python3.11 -m unittest discover -s tests -v (x2)"
+  ],
+  "adversarial_tests": [
+    "tests/test_adversarial.py"
+  ],
+  "runtime": {
+    "operate": "scripts/operate.py (x2)",
+    "dual_run_ok": true,
+    "proof_dual_run_ok": true
+  },
+  "result": "PASS",
+  "limitations": [
+    "not production deployed",
+    "reference implementation only"
+  ],
+  "timestamp": "2026-08-10T10:11Z",
+  "artifact_hashes": {
+    "operability_receipt": "05dc7438d7d07a0820e5b63c9de2634681cc8cd4fec438da6df2470715de280c"
+  }
+}
