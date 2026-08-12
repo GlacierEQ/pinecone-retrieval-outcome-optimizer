@@ -4,13 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pinecone-retrieval-outcome-optimizer"
-version = "0.1.0"
-description = "Retrieval outcome optimization and labeled policy replay reference implementation"
+version = "0.2.0"
+description = "Retrieval outcome optimization, labeled policy replay, and reproducible indexed experiments"
 requires-python = ">=3.11"
 dependencies = []
 
 [project.scripts]
 retrieval-outcome-replay = "outcome_replay_cli:main"
+retrieval-outcome-experiment = "retrieval_experiment_cli:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
@@ -18,7 +19,11 @@ py-modules = [
   "retrieval_outcome_optimizer",
   "outcome_replay_optimizer",
   "outcome_replay_cli",
-  "promotion_authority",
+  "labeled_corpus",
+  "disposable_vector_index",
+  "retrieval_experiment",
+  "retrieval_experiment_cli",
+  "promotion_authority"
 ]
 
 [tool.pytest.ini_options]
