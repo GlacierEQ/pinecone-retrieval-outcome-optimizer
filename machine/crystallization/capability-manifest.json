@@ -1,0 +1,65 @@
+{
+  "schema": "glaciereq.crystallization-capabilities.v1",
+  "capabilities": [
+    {
+      "id": "constrained_candidate_optimizer",
+      "class": "core_domain_logic",
+      "description": "Rank and select retrieval candidates under explicit quality, freshness, latency, cost, and count constraints.",
+      "material": true,
+      "state": "WORKING",
+      "implementation_paths": ["src/retrieval_outcome_optimizer.py"],
+      "verification": ["tests/test_retrieval_outcome_optimizer.py", "tests/test_adversarial.py"],
+      "consumer": "retrieval evaluation pipeline"
+    },
+    {
+      "id": "labeled_outcome_policy_replay",
+      "class": "analytics",
+      "description": "Compare retrieval policies on downstream task success, answer quality, freshness, latency, and cost with evidence shrinkage and promotion margins.",
+      "material": true,
+      "state": "WORKING",
+      "implementation_paths": ["src/outcome_replay_optimizer.py"],
+      "verification": ["tests/test_outcome_replay_optimizer.py"],
+      "consumer": "policy promotion workflow"
+    },
+    {
+      "id": "installable_cli",
+      "class": "CLIs",
+      "description": "Package and execute both replay-only and indexed retrieval experiments as reproducible installed commands with refusal exit semantics.",
+      "material": true,
+      "state": "WORKING",
+      "implementation_paths": ["src/outcome_replay_cli.py", "src/retrieval_experiment_cli.py", "pyproject.toml"],
+      "verification": [".github/workflows/tests.yml", "tests/test_indexed_experiment.py"],
+      "consumer": "human operator and CI"
+    },
+    {
+      "id": "independent_labeled_corpus_ingestion",
+      "class": "data_processing",
+      "description": "Load and validate labeled retrieval corpora with vector-dimension checks, relevance integrity, provenance, and a stable corpus digest.",
+      "material": true,
+      "state": "WORKING",
+      "implementation_paths": ["src/labeled_corpus.py"],
+      "verification": ["tests/test_indexed_experiment.py::test_loads_schema_validated_corpus_with_stable_digest", "tests/test_indexed_experiment.py::test_corpus_rejects_unknown_relevance_reference", "tests/test_indexed_experiment.py::test_corpus_rejects_dimension_mismatch"],
+      "consumer": "outcome experiment pipeline"
+    },
+    {
+      "id": "disposable_vector_index_experiment",
+      "class": "integrations",
+      "description": "Run competing retrieval policies against a real deterministic disposable exact-cosine vector index with namespace, metadata filtering, reranking, and observed retrieval traces.",
+      "material": true,
+      "state": "WORKING",
+      "implementation_paths": ["src/disposable_vector_index.py", "src/retrieval_experiment.py"],
+      "verification": ["tests/test_indexed_experiment.py::test_disposable_index_runs_real_cosine_search_and_namespace_filter", "tests/test_indexed_experiment.py::test_index_refuses_invalid_reranker"],
+      "consumer": "evaluation pipeline"
+    },
+    {
+      "id": "experiment_receipt_pipeline",
+      "class": "observability",
+      "description": "Persist corpus provenance, exact policy configuration, per-query retrieval traces, downstream outcome measurements, replay decision, and experiment digest as a consumable reproducibility artifact.",
+      "material": true,
+      "state": "WORKING",
+      "implementation_paths": ["src/retrieval_experiment.py", "src/retrieval_experiment_cli.py"],
+      "verification": ["tests/test_indexed_experiment.py::test_end_to_end_experiment_promotes_better_downstream_policy", ".github/workflows/tests.yml"],
+      "consumer": "reviewer and CI"
+    }
+  ]
+}

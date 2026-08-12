@@ -10,6 +10,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install -r requirements.txt
+      - run: pip install -r requirements.txt build
       - run: python -m pytest -q
       - run: python scripts/operate.py
+      - run: python -m build
+      - run: pip install dist/*.whl
+      - run: retrieval-outcome-replay examples/labeled_outcome_replay.json --incumbent baseline --output /tmp/replay-receipt.json
+      - run: python -c 'import json; d=json.load(open("/tmp/replay-receipt.json")); assert d["decision"] == "PROMOTE"; assert d["selected_policy_id"] == "outcome-aware"'
+      - run: retrieval-outcome-experiment examples/labeled_vector_corpus.json examples/indexed_experiment_config.json --output /tmp/experiment-receipt.json
+      - run: python -c 'import json; d=json.load(open("/tmp/experiment-receipt.json")); assert d["replay"]["decision"] == "PROMOTE"; assert d["replay"]["selected_policy_id"] == "outcome-aware"; assert len(d["experiment_digest"]) == 64'
