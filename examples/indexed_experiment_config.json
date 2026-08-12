@@ -1,0 +1,23 @@
+{
+  "incumbent_policy_id": "baseline",
+  "min_samples_per_policy": 3,
+  "min_promotion_margin": 0.02,
+  "policies": [
+    {
+      "policy_id": "baseline",
+      "namespace": null,
+      "filter_equals": {"language": "en"},
+      "reranker": "none",
+      "top_k": 1,
+      "freshness_window_hours": 72.0
+    },
+    {
+      "policy_id": "outcome-aware",
+      "namespace": "fresh",
+      "filter_equals": {"language": "en"},
+      "reranker": "quality_freshness",
+      "top_k": 1,
+      "freshness_window_hours": 24.0
+    }
+  ]
+}
