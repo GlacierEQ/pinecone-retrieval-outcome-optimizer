@@ -4,50 +4,34 @@ Independent GlacierEQ portfolio exhibit aligned to **Pinecone** operating themes
 
 > **Not affiliated.** This repository is not affiliated with, endorsed by, employed by, or deployed at Pinecone. No proprietary access, production deployment, customer impact, or company partnership is claimed.
 
-## What it does
+## Problem
 
-This repository treats retrieval as an **outcome optimization problem**, not merely an ANN-recall problem.
+Vector search increasingly appears as a built-in feature of general-purpose databases. A specialized retrieval system earns its keep only if retrieval policy can be tied to the outcome that matters downstream: answer quality, task success, freshness, latency, and cost.
 
-It now has two connected mechanisms:
+## System
 
-1. **`RetrievalOutcomeOptimizer`** selects candidates under explicit relevance, quality, freshness, latency, cost, and result-count constraints. It fails closed when the declared evidence budget cannot be satisfied.
-2. **`OutcomeReplayOptimizer`** replays labeled downstream outcomes across competing retrieval policies and promotes a policy only when labeled coverage and a configurable evidence margin are strong enough. It evaluates task success, answer quality, freshness, latency, and cost together, then shrinks tiny samples toward a neutral prior so one lucky query cannot win a policy decision.
+**Retrieval Outcome Optimizer** treats retrieval as an outcome-optimization problem rather than an ANN-recall endpoint.
 
-The second mechanism closes the previous gap between proxy retrieval metrics and downstream answer/task success.
+The repository now contains four connected execution layers:
 
-## Policy replay model
+1. **Constrained candidate optimization** selects retrieval candidates under explicit relevance, quality, freshness, latency, total-cost, and result-count constraints. Invalid metrics and unsatisfied evidence budgets fail closed.
+2. **Labeled outcome replay** compares competing retrieval policies on downstream task success, answer quality, freshness, latency, and cost. Empirical-Bayes shrinkage prevents a tiny lucky sample from winning a promotion decision, while explicit sample and promotion-margin requirements bound policy changes.
+3. **Schema-validated labeled corpus ingestion + disposable vector index** loads real vector/query/relevance records with provenance and integrity checks, then executes deterministic exact-cosine search with namespace selection, metadata filters, top-k, and optional quality/freshness reranking.
+4. **Reproducible indexed experiments** run multiple retrieval policies against the labeled index, capture every observed hit and downstream outcome, replay the policies, and emit a content-addressed experiment receipt containing corpus identity, policy configuration, query traces, decision evidence, and experiment digest.
 
-A portable `RetrievalPolicy` captures namespace strategy, filter profile, reranker, `top_k`, and freshness window. Each `LabeledOutcome` binds a query/policy pair to task success, answer quality, latency, cost, freshness satisfaction, and an evidence identifier.
+The system is independent of Pinecone APIs. The disposable index is a real searchable index implemented in this repository, not a mocked response fixture.
 
-Replay is deterministic and fail-closed for:
-
-- unknown policy observations;
-- duplicated evidence identities;
-- non-finite or out-of-range measurements;
-- thin labeled coverage;
-- an improvement too small to clear the configured promotion margin;
-- an incumbent that still wins after replay.
-
-Every replay returns a SHA-256 evidence digest over policies, observations, scores, and incumbent context.
-
-## Run it
-
-### Development
+## Install and run
 
 ```bash
 python -m pytest -q
 python scripts/operate.py
-```
-
-### Build and install
-
-```bash
 python -m pip install build
 python -m build
 python -m pip install dist/*.whl
 ```
 
-### Replay labeled outcomes
+### Replay pre-observed labeled outcomes
 
 ```bash
 retrieval-outcome-replay \
@@ -56,20 +40,42 @@ retrieval-outcome-replay \
   --output replay-receipt.json
 ```
 
-The included example produces a `PROMOTE` receipt for the outcome-aware policy because it clears both labeled-coverage and evidence-margin gates. A refusal exits non-zero, making the CLI usable directly in CI and deployment promotion workflows.
+### Run a complete indexed experiment
+
+```bash
+retrieval-outcome-experiment \
+  examples/labeled_vector_corpus.json \
+  examples/indexed_experiment_config.json \
+  --output experiment-receipt.json
+```
+
+The indexed example loads the corpus, builds the disposable vector index, executes both policies query-by-query, captures observed retrieval traces, calculates downstream outcome metrics, and emits the final policy replay decision. Refusal/error paths use non-zero exits so both commands can participate directly in CI or a promotion workflow.
+
+## Evidence and failure behavior
+
+The corpus loader refuses malformed vectors, dimension mismatches, duplicate identifiers, non-finite metrics, and relevance labels that reference unknown documents.
+
+The vector index refuses invalid dimensions, top-k values, filters, and reranker modes. Policy replay refuses unknown-policy observations, duplicate evidence identities, insufficient labeled coverage, an improvement below the required margin, and an incumbent that still wins.
+
+Every major evidence object is content-addressed:
+
+- corpus digest;
+- retrieval-trace evidence IDs;
+- replay evidence digest;
+- experiment digest.
 
 ## Proof surface
 
-- `src/retrieval_outcome_optimizer.py` — deterministic constrained candidate optimizer
-- `src/outcome_replay_optimizer.py` — labeled downstream policy replay and promotion decision
-- `src/outcome_replay_cli.py` — installable replay CLI
-- `tests/test_retrieval_outcome_optimizer.py` — base optimizer behavior
-- `tests/test_outcome_replay_optimizer.py` — labeled replay, thin-data refusal, margin refusal, and evidence-integrity tests
-- `tests/test_adversarial.py` — adversarial mechanism coverage
-- `scripts/operate.py` — cold-start base optimization execution
-- `examples/labeled_outcome_replay.json` — reproducible labeled replay fixture
-- `.github/workflows/tests.yml` — pytest, cold-start operation, wheel build/install, and installed-CLI replay verification
+| Capability | Implementation | Behavioral proof |
+|---|---|---|
+| Constrained candidate optimizer | `src/retrieval_outcome_optimizer.py` | `tests/test_retrieval_outcome_optimizer.py`, `tests/test_adversarial.py` |
+| Labeled policy replay | `src/outcome_replay_optimizer.py` | `tests/test_outcome_replay_optimizer.py` |
+| Labeled corpus ingestion | `src/labeled_corpus.py` | `tests/test_indexed_experiment.py` |
+| Disposable exact vector index | `src/disposable_vector_index.py` | `tests/test_indexed_experiment.py` |
+| Indexed policy experiment | `src/retrieval_experiment.py` | `tests/test_indexed_experiment.py` |
+| Installed CLIs | `src/outcome_replay_cli.py`, `src/retrieval_experiment_cli.py` | `.github/workflows/tests.yml` |
+| Reproducible indexed evidence | `examples/labeled_vector_corpus.json`, `examples/indexed_experiment_config.json` | `.github/workflows/tests.yml` |
 
 ## Current boundary
 
-This is an independent reference implementation. The labeled replay fixture is synthetic and does not claim measured Pinecone production quality. The next external-evidence gate is replay against an independently labeled retrieval dataset and then a disposable vector index. The repository no longer depends on that future work for its core mechanism to function, package, install, or execute.
+This is an independent local/reference retrieval evaluation system. The repository-owned indexed corpus is synthetic reference evidence designed to prove the full execution path; it is not Pinecone production data and does not establish production search quality, customer impact, or company affiliation. External real-world corpora can strengthen empirical evidence without changing the implemented material capability model. Terminal `CRYSTALLIZED` status is earned only when the exact branch head has zero material gaps and its build, behavioral tests, installed runtime, examples, and documentation proof are green.
