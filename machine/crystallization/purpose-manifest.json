@@ -1,0 +1,25 @@
+{
+  "schema": "glaciereq.crystallization-purpose.v1",
+  "canonical_identity": "GlacierEQ/pinecone-retrieval-outcome-optimizer",
+  "purpose": "Optimize retrieval configuration against downstream answer and task success instead of treating ANN recall as the final objective.",
+  "problem": "Specialized retrieval infrastructure is difficult to justify when vector search is commoditized unless retrieval policy can be tied to measurable downstream outcomes, freshness, latency, and cost.",
+  "intended_outcome": "A reviewer or operator can compare retrieval policies on labeled downstream outcomes, reject under-evidenced changes, and select a materially better policy through a reproducible installable tool.",
+  "consumers": ["retrieval engineer", "evaluation pipeline", "CI promotion workflow"],
+  "system_kind": "developer_tool",
+  "naturally_deployable": false,
+  "lineage": {
+    "predecessors": [],
+    "successors": [],
+    "duplicates": [],
+    "canonical_successor": null
+  },
+  "evidence": [
+    "ISSUE_CONTRACT.md",
+    "README.md",
+    "src/retrieval_outcome_optimizer.py",
+    "src/outcome_replay_optimizer.py",
+    "tests/",
+    "examples/labeled_outcome_replay.json",
+    "git history"
+  ]
+}
