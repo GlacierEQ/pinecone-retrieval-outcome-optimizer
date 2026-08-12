@@ -1,20 +1,4 @@
 {
   "schema": "glaciereq.crystallization-gaps.v1",
-  "gaps": [
-    {
-      "capability_id": "independent_labeled_corpus_ingestion",
-      "state": "MISSING",
-      "required_work": "Add a schema-validated loader for an independently labeled retrieval corpus, dataset provenance, deterministic split/replay semantics, and tests against malformed/incomplete labels."
-    },
-    {
-      "capability_id": "disposable_vector_index_experiment",
-      "state": "MISSING",
-      "required_work": "Add an adapter that creates or connects to a disposable vector index, runs competing namespace/filter/reranker/top-k policies, captures actual retrieved results, and converts them into replay observations without claiming proprietary Pinecone access."
-    },
-    {
-      "capability_id": "experiment_receipt_pipeline",
-      "state": "PARTIAL",
-      "required_work": "Persist full experiment provenance and replay artifacts as a versioned machine receipt, including dataset digest, policy definitions, retrieval trace digest, outcome labels, selected policy, command/version metadata, and reproducibility instructions."
-    }
-  ]
+  "gaps": []
 }
