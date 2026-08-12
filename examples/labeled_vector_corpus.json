@@ -1,0 +1,21 @@
+{
+  "corpus_id": "retrieval-outcome-demo-v1",
+  "provenance": {
+    "source": "synthetic-but-indexed-reference-corpus",
+    "purpose": "exercise real vector retrieval and downstream outcome replay",
+    "license": "repository-example"
+  },
+  "documents": [
+    {"document_id":"legacy-q1","vector":[1.0,0.0,0.0],"namespace":"legacy","metadata":{"language":"en","topic":"q1"},"freshness":0.20,"quality":0.45},
+    {"document_id":"fresh-q1","vector":[0.98,0.02,0.0],"namespace":"fresh","metadata":{"language":"en","topic":"q1"},"freshness":0.95,"quality":0.92},
+    {"document_id":"legacy-q2","vector":[0.0,1.0,0.0],"namespace":"legacy","metadata":{"language":"en","topic":"q2"},"freshness":0.25,"quality":0.40},
+    {"document_id":"fresh-q2","vector":[0.02,0.98,0.0],"namespace":"fresh","metadata":{"language":"en","topic":"q2"},"freshness":0.93,"quality":0.90},
+    {"document_id":"legacy-q3","vector":[0.0,0.0,1.0],"namespace":"legacy","metadata":{"language":"en","topic":"q3"},"freshness":0.10,"quality":0.50},
+    {"document_id":"fresh-q3","vector":[0.01,0.01,0.99],"namespace":"fresh","metadata":{"language":"en","topic":"q3"},"freshness":0.97,"quality":0.94}
+  ],
+  "queries": [
+    {"query_id":"q1","vector":[1.0,0.0,0.0],"relevant_document_ids":["fresh-q1"]},
+    {"query_id":"q2","vector":[0.0,1.0,0.0],"relevant_document_ids":["fresh-q2"]},
+    {"query_id":"q3","vector":[0.0,0.0,1.0],"relevant_document_ids":["fresh-q3"]}
+  ]
+}
