@@ -1,0 +1,65 @@
+{
+  "schema": "glaciereq.crystallization-capabilities.v1",
+  "capabilities": [
+    {
+      "id": "constrained_candidate_optimizer",
+      "class": "core_domain_logic",
+      "description": "Rank and select retrieval candidates under explicit quality, freshness, latency, cost, and count constraints.",
+      "material": true,
+      "state": "WORKING",
+      "implementation_paths": ["src/retrieval_outcome_optimizer.py"],
+      "verification": ["tests/test_retrieval_outcome_optimizer.py", "tests/test_adversarial.py"],
+      "consumer": "retrieval evaluation pipeline"
+    },
+    {
+      "id": "labeled_outcome_policy_replay",
+      "class": "analytics",
+      "description": "Compare retrieval policies on downstream task success, answer quality, freshness, latency, and cost with evidence shrinkage and promotion margins.",
+      "material": true,
+      "state": "WORKING",
+      "implementation_paths": ["src/outcome_replay_optimizer.py"],
+      "verification": ["tests/test_outcome_replay_optimizer.py"],
+      "consumer": "policy promotion workflow"
+    },
+    {
+      "id": "installable_cli",
+      "class": "CLIs",
+      "description": "Package and execute labeled outcome replay as a reproducible installed command with refusal exit semantics.",
+      "material": true,
+      "state": "WORKING",
+      "implementation_paths": ["src/outcome_replay_cli.py", "pyproject.toml"],
+      "verification": [".github/workflows/tests.yml"],
+      "consumer": "human operator and CI"
+    },
+    {
+      "id": "independent_labeled_corpus_ingestion",
+      "class": "data_processing",
+      "description": "Ingest a real independently labeled retrieval corpus rather than relying only on the synthetic replay fixture.",
+      "material": true,
+      "state": "MISSING",
+      "implementation_paths": [],
+      "verification": [],
+      "consumer": "outcome replay engine"
+    },
+    {
+      "id": "disposable_vector_index_experiment",
+      "class": "integrations",
+      "description": "Exercise candidate retrieval policies against a disposable real vector index and record the observed retrieval/outcome trace.",
+      "material": true,
+      "state": "MISSING",
+      "implementation_paths": [],
+      "verification": [],
+      "consumer": "evaluation pipeline"
+    },
+    {
+      "id": "experiment_receipt_pipeline",
+      "class": "observability",
+      "description": "Persist reproducible experiment inputs, policy configuration, labeled observations, selected policy, evidence digest, and run provenance as a consumable artifact.",
+      "material": true,
+      "state": "PARTIAL",
+      "implementation_paths": ["src/outcome_replay_optimizer.py", "src/outcome_replay_cli.py"],
+      "verification": ["tests/test_outcome_replay_optimizer.py"],
+      "consumer": "reviewer and CI"
+    }
+  ]
+}
