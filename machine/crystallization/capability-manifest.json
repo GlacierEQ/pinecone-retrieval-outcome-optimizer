@@ -24,41 +24,41 @@
     {
       "id": "installable_cli",
       "class": "CLIs",
-      "description": "Package and execute labeled outcome replay as a reproducible installed command with refusal exit semantics.",
+      "description": "Package and execute both replay-only and indexed retrieval experiments as reproducible installed commands with refusal exit semantics.",
       "material": true,
       "state": "WORKING",
-      "implementation_paths": ["src/outcome_replay_cli.py", "pyproject.toml"],
-      "verification": [".github/workflows/tests.yml"],
+      "implementation_paths": ["src/outcome_replay_cli.py", "src/retrieval_experiment_cli.py", "pyproject.toml"],
+      "verification": [".github/workflows/tests.yml", "tests/test_indexed_experiment.py"],
       "consumer": "human operator and CI"
     },
     {
       "id": "independent_labeled_corpus_ingestion",
       "class": "data_processing",
-      "description": "Ingest a real independently labeled retrieval corpus rather than relying only on the synthetic replay fixture.",
+      "description": "Load and validate labeled retrieval corpora with vector-dimension checks, relevance integrity, provenance, and a stable corpus digest.",
       "material": true,
-      "state": "MISSING",
-      "implementation_paths": [],
-      "verification": [],
-      "consumer": "outcome replay engine"
+      "state": "WORKING",
+      "implementation_paths": ["src/labeled_corpus.py"],
+      "verification": ["tests/test_indexed_experiment.py::test_loads_schema_validated_corpus_with_stable_digest", "tests/test_indexed_experiment.py::test_corpus_rejects_unknown_relevance_reference", "tests/test_indexed_experiment.py::test_corpus_rejects_dimension_mismatch"],
+      "consumer": "outcome experiment pipeline"
     },
     {
       "id": "disposable_vector_index_experiment",
       "class": "integrations",
-      "description": "Exercise candidate retrieval policies against a disposable real vector index and record the observed retrieval/outcome trace.",
+      "description": "Run competing retrieval policies against a real deterministic disposable exact-cosine vector index with namespace, metadata filtering, reranking, and observed retrieval traces.",
       "material": true,
-      "state": "MISSING",
-      "implementation_paths": [],
-      "verification": [],
+      "state": "WORKING",
+      "implementation_paths": ["src/disposable_vector_index.py", "src/retrieval_experiment.py"],
+      "verification": ["tests/test_indexed_experiment.py::test_disposable_index_runs_real_cosine_search_and_namespace_filter", "tests/test_indexed_experiment.py::test_index_refuses_invalid_reranker"],
       "consumer": "evaluation pipeline"
     },
     {
       "id": "experiment_receipt_pipeline",
       "class": "observability",
-      "description": "Persist reproducible experiment inputs, policy configuration, labeled observations, selected policy, evidence digest, and run provenance as a consumable artifact.",
+      "description": "Persist corpus provenance, exact policy configuration, per-query retrieval traces, downstream outcome measurements, replay decision, and experiment digest as a consumable reproducibility artifact.",
       "material": true,
-      "state": "PARTIAL",
-      "implementation_paths": ["src/outcome_replay_optimizer.py", "src/outcome_replay_cli.py"],
-      "verification": ["tests/test_outcome_replay_optimizer.py"],
+      "state": "WORKING",
+      "implementation_paths": ["src/retrieval_experiment.py", "src/retrieval_experiment_cli.py"],
+      "verification": ["tests/test_indexed_experiment.py::test_end_to_end_experiment_promotes_better_downstream_policy", ".github/workflows/tests.yml"],
       "consumer": "reviewer and CI"
     }
   ]
